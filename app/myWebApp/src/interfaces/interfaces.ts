@@ -9,3 +9,8 @@ export interface Poll {
     name : string;
     options : PollOption[];
 }
+
+export interface PollDTO {
+    name : string;
+    options : PollOption[];
+}

@@ -1,11 +1,59 @@
-import { Container, Paper, Typography } from '@mui/material'
-import React, { useState } from 'react'
-import { Poll } from '../interfaces/interfaces';
+import { Box, Button, Container, Modal, Paper, TextField, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Poll, PollDTO, PollOption } from '../interfaces/interfaces';
+import { usePoll } from '../hooks/usePoll';
+import { useNavigate } from 'react-router-dom';
+import PollCard from '../components/PollCard';
+import { createPoll } from '../services/pollService';
+import { toast, ToastContainer } from 'react-toastify';
 
 const Home: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
-    const [polls, setPolls] = useState<Poll[]>();
+    const [succes, setSucces] = useState<string>("");
+    const {data: polls, isLoading, error} = usePoll();
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [pollCreated, setPollCreated] = useState<PollDTO>();
+
+    const [newPollName, setPollName] = useState<string>("");
+    const [newPollOptions, setPollOptions] = useState<PollOption[]>();
+
+    const navigate = useNavigate();
+
+    const handleGoVotePage = (id: string) => {
+        navigate(`/v1/polls/${id}`);
+    }
+
+    if (isLoading) return <p>Loading...</p>;
+    if (error) return <p>Error loading polls</p>;
+
+    // useEffect(() => {
+    //     const getPolls = async () => {
+    //         const pollsFetch = await usePoll();
+    //         if (pollsFetch) {
+                
+    //         }
+    //     }
+    // }, [])
     
+
+    const handleAddPoll = () => {
+        const addPoll = createPoll({name: newPollName, options: [{id: "ss", name: "ss", votes: 0 }]});
+        toast.error("Error");
+    }
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+      };
 
   return (
     <Container
@@ -13,9 +61,13 @@ const Home: React.FC = () => {
         height: "100vh",
         width: "100vw",
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignContent: "center",
-        paddingTop: "5rem"
+        alignItems: "center",
+        textAlign: "center",
+        paddingTop: "5rem",
+        background: "#fff"
       }}
     >
     <Paper
@@ -24,13 +76,60 @@ const Home: React.FC = () => {
           width: "500px",
           display: "flex",
           justifyContent: "center",
+          flexDirection: "column",
+          textAlign: "center"
         }}
         elevation={10}
       >
-        <Typography className='mt-4' variant="h3" color="primary">
+
+
+        <div className="d-flex justify-content-right">
+        <Button onClick={handleOpen}>Add Poll</Button>
+            <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            >
+            <Box sx={style}>
+
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+                 Name
+                </Typography>
+                <TextField id="outlined-basic" label="Outlined" variant="outlined" onChange={() => setPollName}  />
+
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                 Write The options
+                </Typography>
+
+                <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+
+                <Button onClick={handleAddPoll}>Save</Button>
+
+            </Box>
+            </Modal>
+        </div>
+
+
+                <Typography className='mt-4' variant="h3" color="primary">
           Polls
         </Typography>
+
+        <div>
+            {
+                polls?.map((poll) => (
+                    <PollCard
+                        key={poll.id}
+                        id={poll.id}
+                        title={poll.name}
+                        options={poll.options}
+                    />
+                )
+                )
+            }
+        </div>
       </Paper>
+      <ToastContainer/>
     </Container>
   )
 }
