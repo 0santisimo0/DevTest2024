@@ -58,7 +58,6 @@ const PollCard: React.FC<ProductCardProps> = ({ id, title, options, onViewDetail
                         <Button variant="outlined" onClick={handleVote}>
                             <div>
                                 {option.name}
-                                <p>{option.votes}</p>
                             </div>
                         </Button>
                     ))
@@ -73,7 +72,6 @@ const PollCard: React.FC<ProductCardProps> = ({ id, title, options, onViewDetail
             options?.map((option)=> (
                 <div>
                     {option.name}
-                    <p>{option.votes}</p>
                 </div>
             ))
         }

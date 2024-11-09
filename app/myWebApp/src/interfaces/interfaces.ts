@@ -1,16 +1,22 @@
 export interface PollOption {
-    id : string; 
     name : string;
-    votes : number;
+}
+
+export interface VoteDTO {
+    optionId: string;
+    voterEmail: string;
 }
 
 export interface Poll {
     id : string;
     name : string;
     options : PollOption[];
+    votes : VoteDTO[];
 }
+
 
 export interface PollDTO {
     name : string;
     options : PollOption[];
+    votes : VoteDTO[];
 }

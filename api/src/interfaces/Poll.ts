@@ -1,9 +1,7 @@
 import { VoteDTO } from "../dtos/VoteDTO";
 
 export interface PollOption {
-    id : string; 
     name : string;
-    votes : number;
 }
 
 export class Poll {
@@ -12,11 +10,11 @@ export class Poll {
     options : PollOption[];
     votes: VoteDTO[];
 
-    constructor(id: string, name: string, options: PollOption[]) {
+    constructor(id: string, name: string, options: PollOption[], votes: VoteDTO[]) {
         this.id = id;
         this.name = name;
         this.options = options;
-        this.votes = [];
+        this.votes = votes;
     }
 }
 

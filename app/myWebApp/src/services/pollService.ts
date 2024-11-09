@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Poll } from "../interfaces/interfaces";
+import { PollDTO } from "../interfaces/interfaces";
 
 const API_URL = 'http://localhost:3000/api';
 
@@ -8,7 +8,7 @@ export const fetchPolls = async () => {
     return response.data;
 }
 
-export const createPoll = async (poll : Poll) => {
+export const createPoll = async (poll : PollDTO) => {
     const request = await axios.post(`${API_URL}/v1/polls`, poll);
     return request.data;
 }

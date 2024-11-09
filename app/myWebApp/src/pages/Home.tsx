@@ -1,6 +1,5 @@
 import { Box, Button, Container, Modal, Paper, TextField, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { Poll, PollDTO, PollOption } from '../interfaces/interfaces';
+import React, { useState } from 'react'
 import { usePoll } from '../hooks/usePoll';
 import { useNavigate } from 'react-router-dom';
 import PollCard from '../components/PollCard';
@@ -9,18 +8,18 @@ import { toast, ToastContainer } from 'react-toastify';
 
 const Home: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
-    const [succes, setSucces] = useState<string>("");
     const {data: polls, isLoading, error} = usePoll();
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [pollCreated, setPollCreated] = useState<PollDTO>();
+
+    const [firstOption, setFirstOption] = useState<string>("");
+    const [secondOption, setSecondOption] = useState<string>("");
 
     const [newPollName, setPollName] = useState<string>("");
-    const [newPollOptions, setPollOptions] = useState<PollOption[]>();
-
     const navigate = useNavigate();
 
+    
     const handleGoVotePage = (id: string) => {
         navigate(`/v1/polls/${id}`);
     }
@@ -38,9 +37,8 @@ const Home: React.FC = () => {
     // }, [])
     
 
-    const handleAddPoll = () => {
-        const addPoll = createPoll({name: newPollName, options: [{id: "ss", name: "ss", votes: 0 }]});
-        toast.error("Error");
+    const handleAddPoll = async () => {
+        await createPoll({name: newPollName, options: [{name: firstOption}, {name: secondOption}], votes: []});
     }
 
     const style = {
@@ -72,7 +70,6 @@ const Home: React.FC = () => {
     >
     <Paper
         sx={{
-          height: "600px",
           width: "500px",
           display: "flex",
           justifyContent: "center",
@@ -102,7 +99,8 @@ const Home: React.FC = () => {
                  Write The options
                 </Typography>
 
-                <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+                <TextField id="outlined-basic" label="Outlined" variant="outlined" onChange={() => setFirstOption} />
+                <TextField id="outlined-basic" label="Outlined" variant="outlined" onChange={() => setSecondOption}  />
 
                 <Button onClick={handleAddPoll}>Save</Button>
 

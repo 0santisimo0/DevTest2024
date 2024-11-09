@@ -10,7 +10,7 @@ export class MemoryStorageRepository implements IStorageRepository {
         return this.polls;
     }
     async createPoll(poll: CreatePollDto): Promise<Poll> {
-        const newPoll = new Poll(String(this.polls.length+1), poll.name, poll.options);
+        const newPoll = new Poll(String(this.polls.length+1), poll.name, poll.options, poll.votes);
         this.polls.push(newPoll);
         return newPoll;
     }
@@ -20,12 +20,7 @@ export class MemoryStorageRepository implements IStorageRepository {
             throw Error("Invalid")
         }
 
-        const option = foundPoll.options.find((option) => option.id === vote.optionId);
-        if (option) {
-            option.votes += 1;
-            
-            foundPoll.votes.push(vote);
-        }
+        foundPoll.votes.push(vote);
 
         return foundPoll;
     }
